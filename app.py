@@ -7,6 +7,6 @@ st.title('Test')
 df = utl.scrape('https://www.argaam.com/en/company/companies-prices', ['2222'])
 df.columns = ['ticker']
 
-# df['name'] = df.apply(lambda x: yf.Ticker(x), axis=1)
+df['name'] = df.apply(lambda x: yf.Ticker(x['ticker']).info['longName'], axis=1)
 
 st.dataframe(df)
