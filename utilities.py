@@ -38,9 +38,12 @@ def compute_svix_for_tickers(tickers):
     data = []
     
     for ticker in tickers:
-        info = yf.Ticker(ticker).info
-        svix = (1 - (info['previousClose'] - info['fiftyTwoWeekLow']) / (info['fiftyTwoWeekHigh'] - info['fiftyTwoWeekLow'])) * 100
-        data.append([ticker, info['longName'], svix])
+        try:
+            info = yf.Ticker(ticker).info
+            svix = (1 - (info['previousClose'] - info['fiftyTwoWeekLow']) / (info['fiftyTwoWeekHigh'] - info['fiftyTwoWeekLow'])) * 100
+            data.append([ticker, info['longName'], svix])
+        except:
+            pass
         
     return pd.DataFrame(data, columns=['ticker', 'name', 'svix'])
 
