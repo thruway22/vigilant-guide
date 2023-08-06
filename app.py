@@ -4,6 +4,9 @@ import utilities as utl
 st.title('Test')
 
 # Usage
-tickers = utl.scrape('https://www.argaam.com/en/company/companies-prices', ['2222'])
+df = utl.scrape('https://www.argaam.com/en/company/companies-prices', ['2222'])
+df.columns = ['ticker']
 
-st.dataframe(tickers)
+# df['name'] = df.apply(lambda x: yf.Ticker(x), axis=1)
+
+st.dataframe(df)
