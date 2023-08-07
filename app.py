@@ -5,6 +5,7 @@ import utilities as utl
 
 st.title('Test')
 
+interval = st.select_slider('Interval', options=('Daily', 'Weekly'))
 lookback = st.slider('Lookback', min_value=1, max_value=52, value=20, step=1)
 
 # Usage
