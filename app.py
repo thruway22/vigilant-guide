@@ -5,13 +5,13 @@ import utilities as utl
 
 st.title('Test')
 
-interval = st.sidebar.selectbox('Interval', ['Daily', 'Weekly'])
-lookback = st.sidebar.slider('Lookback', min_value=1, max_value=52, value=20, step=1)
+# interval = st.sidebar.selectbox('Interval', ['Daily', 'Weekly'])
+# lookback = st.sidebar.slider('Lookback', min_value=1, max_value=52, value=20, step=1)
 
-# col1, col2 = st.columns([1,3])
+col1, col2 = st.columns([1,3])
 
-# interval = col1.select_slider('Interval', options=('Daily', 'Weekly'))
-# lookback = col2.slider('Lookback', min_value=1, max_value=52, value=20, step=1)
+interval = col1.selectbox('Interval', ['Daily', 'Weekly'])
+lookback = col2.slider('Lookback', min_value=1, max_value=52, value=20, step=1)
 
 
 
