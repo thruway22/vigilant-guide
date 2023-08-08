@@ -35,19 +35,19 @@ def scrape(url, wanted_list):
     
 #     return df
 
-def compute_svix_for_tickers(tickers):
-    """Compute svix for a list of tickers."""
-    data = []
+# def compute_svix_for_tickers(tickers):
+#     """Compute svix for a list of tickers."""
+#     data = []
     
-    for ticker in tickers:
-        try:
-            info = yf.Ticker(ticker).info
-            svix = (1 - (info['previousClose'] - info['fiftyTwoWeekLow']) / (info['fiftyTwoWeekHigh'] - info['fiftyTwoWeekLow'])) * 100
-            data.append([ticker, info['longName'], svix])
-        except:
-            pass
+#     for ticker in tickers:
+#         try:
+#             info = yf.Ticker(ticker).info
+#             svix = (1 - (info['previousClose'] - info['fiftyTwoWeekLow']) / (info['fiftyTwoWeekHigh'] - info['fiftyTwoWeekLow'])) * 100
+#             data.append([ticker, info['longName'], svix])
+#         except:
+#             pass
         
-    return pd.DataFrame(data, columns=['ticker', 'name', 'svix'])
+#     return pd.DataFrame(data, columns=['ticker', 'name', 'svix'])
 
 
 
@@ -75,13 +75,9 @@ def download_data(tickers):
         # Fetch additional information
         info = yf.Ticker(ticker).info
         ticker_data = {
-            "shortName": info.get("shortName", None),
             "longName": info.get("longName", None),
-            "sector": info.get("sector", None),
             "currentPrice": info.get("currentPrice", None),
             "marketCap": info.get("marketCap", None),
-            "52WeekChange": info.get("52WeekChange", None),
-            "sharesOutstanding": info.get("sharesOutstanding", None),
             "historical_data": historical_data
         }
         
@@ -112,13 +108,9 @@ def compute_metric_from_data(data_dict, interval, lookback):
         metric = 1 - (latest_close - lowest_low) / (highest_high - lowest_low)
         
         metrics[ticker] = {
-            "shortName": ticker_data["shortName"],
             "longName": ticker_data["longName"],
-            "sector": ticker_data["sector"],
             "currentPrice": ticker_data["currentPrice"],
             "marketCap": ticker_data["marketCap"],
-            "52WeekChange": ticker_data["52WeekChange"],
-            "sharesOutstanding": ticker_data["sharesOutstanding"],
             "computed_metric": metric
         }
     
