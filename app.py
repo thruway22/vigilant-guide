@@ -59,7 +59,7 @@ def create_dataframe(result, ticker=None):
     df.index = df.index.str.replace('.SR', '')
     df.columns = ['Company', 'Price', 'Market Cap', 'SVIX']
 
-    if ticker =! None:
+    if ticker != None:
         df = df.loc[ticker]
 
     st.dataframe(df, use_container_width=True, column_config={
