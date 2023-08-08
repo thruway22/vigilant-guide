@@ -60,7 +60,6 @@ def create_dataframe(result):
     df.columns = ['Company', 'Price', 'Market Cap', 'SVIX']
     df['Price'] = df['Price'].astype(str) + ' SAR'
 
-
     st.dataframe(df, use_container_width=True, column_config={
         "SVIX": st.column_config.ProgressColumn(),
     },)
