@@ -15,6 +15,8 @@ interval = col1.selectbox('Interval', ['Daily', 'Weekly'])
 lookback = col2.slider('Lookback', min_value=1, max_value=52, value=20, step=1)
 marketcap = st.slider('Market Cap', min_value=df['marketCap'].min(), max_value=df['marketCap'].max())
 
+st.dataframe(df)
+
 st.pyplot(df['marketCap'].hist())
 
 # # Sample usage:
