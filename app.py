@@ -58,6 +58,7 @@ def create_dataframe(result):
     df = pd.DataFrame(result).T
     df.index = df.index.str.replace('.SR', '')
     df.columns = ['Company', 'Price', 'Market Cap', 'SVIX']
+    df['Price'] = df['Price'].astype(str) + ' SAR'
 
 
     st.dataframe(df, use_container_width=True, column_config={
