@@ -89,17 +89,20 @@ def compute_metric_from_data(data_dict, interval, lookback):
     
     for ticker, ticker_data in data_dict.items():
         data = ticker_data["historical_data"]
-        latest_close = data['Close'].iloc[-1]
+        
         
         if interval == "Weekly":
             # Filter only the Thursdays' data
             data = data[data.index.weekday == 3][-lookback:]
+            if data.empty:
+                continue
         else:
             # Consider business days only (excluding Fridays and Saturdays)
             calendar_days = lookback + 2 * (lookback // 5)
             data = data[-calendar_days:]
         
         # Extract required data
+        latest_close = data['Close'].iloc[-1]
         lowest_low = data['Low'].min()
         highest_high = data['High'].max()
         
