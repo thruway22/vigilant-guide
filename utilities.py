@@ -2,6 +2,8 @@ import pandas as pd
 import yfinance as yf
 import streamlit as st
 from autoscraper import AutoScraper
+from datetime import datetime, timedelta
+
 
 @st.cache_data(show_spinner=False)
 def scrape(url, wanted_list):
@@ -53,9 +55,6 @@ def scrape(url, wanted_list):
 
 #########
 
-import yfinance as yf
-from datetime import datetime, timedelta
-
 def compute_start_date_for_max_data() -> datetime:
     today = datetime.today()
     # Calculate how many days to go back to the previous Sunday
@@ -90,6 +89,7 @@ def compute_metric_from_data(data_dict, interval, lookback):
     
     for ticker, ticker_data in data_dict.items():
         data = ticker_data["historical_data"]
+        latest_close = data['Close'].iloc[-1]
         
         if interval == "Weekly":
             # Filter only the Thursdays' data
@@ -100,7 +100,6 @@ def compute_metric_from_data(data_dict, interval, lookback):
             data = data[-calendar_days:]
         
         # Extract required data
-        latest_close = data['Close'].iloc[-1]
         lowest_low = data['Low'].min()
         highest_high = data['High'].max()
         
