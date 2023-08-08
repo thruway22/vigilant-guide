@@ -17,7 +17,7 @@ marketcap = st.slider('Market Cap', min_value=df['marketCap'].min(), max_value=d
 
 st.dataframe(df)
 
-st.pyplot(df['marketCap'].hist())
+st.pyplot(df['marketCap'].fillna(0).hist())
 
 # # Sample usage:
 
