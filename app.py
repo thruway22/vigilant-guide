@@ -18,6 +18,7 @@ lookback = st.sidebar.slider('Lookback', min_value=1, max_value=52, value=20, st
 submitted = st.sidebar.form.form_submit_button("Show Results")
 
 
+
 # tickers = utl.scrape('https://www.argaam.com/en/company/companies-prices', ['2222'])
 # result = utl.get_metric(tickers, interval, lookback)
 # st.dataframe(result)
