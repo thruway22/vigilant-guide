@@ -4,21 +4,17 @@ import streamlit as st
 from autoscraper import AutoScraper
 from datetime import datetime, timedelta
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(show_spinner=False, progress_bar=None)
 def scrape(url, wanted_list):
     scraper = AutoScraper()
     tickers = scraper.build(url, wanted_list)
     tickers = {ticker.strip() + '.SR' for ticker in tickers}
+    if progress_bar:
+        progress_bar.progress(20)
     return tickers
 
-def compute_start_date_for_max_data() -> datetime:
-    today = datetime.today()
-    days_to_last_sunday = today.weekday() + 1
-    start_date = today - timedelta(days=days_to_last_sunday + 51*7)  # 51 weeks + current week
-    return start_date
-
 @st.cache_data(show_spinner=False)
-def download_data(tickers):
+def download_data(tickers, progress_bar=None):
     start_date = compute_start_date_for_max_data()
     data_dict = {}
     for ticker in tickers:
@@ -30,7 +26,16 @@ def download_data(tickers):
             "marketCap": info.get("marketCap", None),
             "historical_data": historical_data}
         data_dict[ticker] = ticker_data
+        if progress_bar:
+                progress = 20 + (idx + 1) / total_tickers * 80  # 20% already covered by scrape function
+                progress_bar.progress(progress)
     return data_dict
+
+def compute_start_date_for_max_data() -> datetime:
+    today = datetime.today()
+    days_to_last_sunday = today.weekday() + 1
+    start_date = today - timedelta(days=days_to_last_sunday + 51*7)  # 51 weeks + current week
+    return start_date
 
 def compute_metric_from_data(data_dict, interval, lookback):
     metrics = {}
@@ -69,17 +74,13 @@ def create_dataframe(result, ticker=None):
 
 st.title('Saudi Market StochasticVIX')
 
-# Start Streamlit Progress Bar
-progress_text = "Fetching and downloading data. Please wait..."
-my_bar = st.progress(0, text=progress_text)
+placeholder = st.empty()
+progress_bar = placeholder.progress(0, text="Fetching and downloading data. Please wait...")
 
-# Scrape tickers
-tickers = scrape('https://www.argaam.com/en/company/companies-prices', ['2222'])
-my_bar.progress(50, text=progress_text)  # Update progress to 50% after scraping
+tickers = scrape('https://www.argaam.com/en/company/companies-prices', ['2222'], progress_bar)
+data_dict = download_data(tickers, progress_bar)
 
-# Download data
-data_dict = download_data(tickers)
-my_bar.progress(100, text="Data fetched successfully!")
+placeholder.empty()
 
 col1, col2 = st.columns([1,3])
 # interval = col1.selectbox('Interval', ['Daily', 'Weekly'])
