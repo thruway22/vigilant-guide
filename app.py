@@ -69,8 +69,17 @@ def create_dataframe(result, ticker=None):
 
 st.title('Saudi Market StochasticVIX')
 
+# Start Streamlit Progress Bar
+progress_text = "Fetching and downloading data. Please wait..."
+my_bar = st.progress(0, text=progress_text)
+
+# Scrape tickers
 tickers = scrape('https://www.argaam.com/en/company/companies-prices', ['2222'])
+my_bar.progress(50, text=progress_text)  # Update progress to 50% after scraping
+
+# Download data
 data_dict = download_data(tickers)
+my_bar.progress(100, text="Data fetched successfully!")
 
 col1, col2 = st.columns([1,3])
 # interval = col1.selectbox('Interval', ['Daily', 'Weekly'])
