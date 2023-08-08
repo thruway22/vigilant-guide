@@ -54,11 +54,14 @@ def compute_metric_from_data(data_dict, interval, lookback):
             "computed_metric": metric}
     return metrics
 
-def create_dataframe(result):
+def create_dataframe(result, ticker=None):
     df = pd.DataFrame(result).T
     df.index = df.index.str.replace('.SR', '')
     df.columns = ['Company', 'Price', 'Market Cap', 'SVIX']
-    
+
+    if ticker =! None:
+        df = df.loc[ticker]
+
     st.dataframe(df, use_container_width=True, column_config={
         "SVIX": st.column_config.ProgressColumn(),
     },)
@@ -72,12 +75,13 @@ st.title('Saudi Market StochasticVIX')
 tickers = scrape('https://www.argaam.com/en/company/companies-prices', ['2222'])
 data_dict = download_data(tickers)
 
-col1, col2 = st.columns([1,3])
-interval = col1.selectbox('Interval', ['Daily', 'Weekly'])
-lookback = col2.slider('Lookback', min_value=3, max_value=52, value=20, step=1)
+col1, col2, col3 = st.columns([1,1,3])
+interval = col2.selectbox('Interval', ['Daily', 'Weekly'])
+lookback = col3.slider('Lookback', min_value=3, max_value=52, value=20, step=1)
+ticker = col1.number_input('Ticker')
 
 
 result = compute_metric_from_data(data_dict, interval, lookback)
-create_dataframe(result)
+create_dataframe(result, ticker)
 
 
