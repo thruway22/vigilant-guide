@@ -4,17 +4,16 @@ import streamlit as st
 from autoscraper import AutoScraper
 from datetime import datetime, timedelta
 
-@st.cache_resource(show_spinner=False)
-def scrape(url, wanted_list, progress_bar=None):
+@st.cache_resource(show_spinner=False, allow_output_mutation=True)
+def scrape(url, wanted_list):
     scraper = AutoScraper()
     tickers = scraper.build(url, wanted_list)
     tickers = {ticker.strip() + '.SR' for ticker in tickers}
-    if progress_bar:
-        progress_bar.progress(20)
+    st.session_state.progress = 20
     return tickers
 
-@st.cache_resource(show_spinner=False)
-def download_data(tickers, progress_bar=None):
+@st.cache_resource(show_spinner=False, allow_output_mutation=True)
+def download_data(tickers):
     start_date = compute_start_date_for_max_data()
     data_dict = {}
     for ticker in tickers:
@@ -26,9 +25,8 @@ def download_data(tickers, progress_bar=None):
             "marketCap": info.get("marketCap", None),
             "historical_data": historical_data}
         data_dict[ticker] = ticker_data
-        if progress_bar:
-                progress = 20 + (idx + 1) / total_tickers * 80  # 20% already covered by scrape function
-                progress_bar.progress(progress)
+        progress = 20 + (idx + 1) / total_tickers * 80
+        st.session_state.progress = progress
     return data_dict
 
 def compute_start_date_for_max_data() -> datetime:
@@ -74,11 +72,21 @@ def create_dataframe(result, ticker=None):
 
 st.title('Saudi Market StochasticVIX')
 
-placeholder = st.empty()
-progression = placeholder.progress(0, text="Fetching and downloading data. Please wait...")
+# Initialize session state for progress if not already set
+if "progress" not in st.session_state:
+    st.session_state.progress = 0
 
-tickers = scrape('https://www.argaam.com/en/company/companies-prices', ['2222'], progression)
-data_dict = download_data(tickers, progression)
+placeholder = st.empty()
+
+# Start Streamlit Progress Bar using session state progress
+progress_text = "Fetching and downloading data. Please wait..."
+my_bar = placeholder.progress(st.session_state.progress, text=progress_text)
+
+tickers = scrape('https://www.argaam.com/en/company/companies-prices', ['2222'])
+my_bar.progress(st.session_state.progress)
+
+data_dict = download_data(tickers)
+my_bar.progress(st.session_state.progress)
 
 placeholder.empty()
 
