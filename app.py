@@ -32,3 +32,5 @@ result = utl.compute_metric_from_data(data_dict, interval, lookback)
 result = pd.DataFrame(result).T
 result = result[result['marketCap'] >= marketcap]
 st.dataframe(result)
+
+df['marketCap'].hist()
