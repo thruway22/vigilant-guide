@@ -16,9 +16,10 @@ interval = col1.selectbox('Interval', ['Daily', 'Weekly'])
 lookback = col2.slider('Lookback', min_value=1, max_value=52, value=20, step=1)
 marketcap = st.slider('Market Cap', min_value=df['marketCap'].min(), max_value=df['marketCap'].max())
 
-st.dataframe(df)
-
-st.pyplot(plt.hist(df['marketCap'].fillna(0)))
+st.dataframe(df[df['longName'].isna()])
+st.dataframe(df[df['sector'].isna()])
+st.dataframe(df[df['marketCap'].isna()])
+st.dataframe(df[df['currentPrice'].isna()])
 
 # # Sample usage:
 
