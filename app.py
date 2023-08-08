@@ -67,7 +67,7 @@ st.title('Saudi Market StochasticVIX')
 
 tickers = scrape('https://www.argaam.com/en/company/companies-prices', ['2222'])
 data_dict = download_data(tickers)
-df = create_dataframe(data_dcit)
+df = create_dataframe(data_dict)
 
 col1, col2 = st.columns([1,3])
 interval = col1.selectbox('Interval', ['Daily', 'Weekly'])
