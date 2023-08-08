@@ -20,7 +20,6 @@ for ticker in tickers:
     t = yf.Ticker(ticker).info
     st.write([t['longName'], t['sharesOutstanding']])
 
-
 # # Sample usage:
 
 # # Download the maximum possible data once
