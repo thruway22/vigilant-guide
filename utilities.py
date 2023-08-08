@@ -3,7 +3,7 @@ import yfinance as yf
 import streamlit as st
 from autoscraper import AutoScraper
 
-@st.cache_data
+@st.cache_data(show_spinner=False)
 def scrape(url, wanted_list):
     """Scrape and retrieve tickers from the provided URL."""
     scraper = AutoScraper()
@@ -63,7 +63,7 @@ def compute_start_date_for_max_data() -> datetime:
     start_date = today - timedelta(days=days_to_last_sunday + 51*7)  # 51 weeks + current week
     return start_date
 
-@st.cache_data
+@st.cache_data(show_spinner=False)
 def download_data(tickers):
     start_date = compute_start_date_for_max_data()
     data_dict = {}
