@@ -12,10 +12,10 @@ st.title('Test')
 # interval = col1.selectbox('Interval', ['Daily', 'Weekly'])
 # lookback = col2.slider('Lookback', min_value=1, max_value=52, value=20, step=1)
 
-form = st.sidebar.form("form")
-interval = st.sidebar.selectbox('Interval', ['Daily', 'Weekly'])
-lookback = st.sidebar.slider('Lookback', min_value=1, max_value=52, value=20, step=1)
-submitted = st.sidebar.form.form_submit_button("Show Results")
+form = st.form("form")
+interval = form.selectbox('Interval', ['Daily', 'Weekly'])
+lookback = form.slider('Lookback', min_value=1, max_value=52, value=20, step=1)
+submitted = form.form_submit_button("Show Results")
 
 
 
