@@ -81,6 +81,7 @@ def download_data(tickers):
             "currentPrice": info.get("currentPrice", None),
             "marketCap": info.get("marketCap", None),
             "52WeekChange": info.get("52WeekChange", None),
+            "sharesOutstanding": info.get("sharesOutstanding", None),
             "historical_data": historical_data
         }
         
@@ -117,6 +118,7 @@ def compute_metric_from_data(data_dict, interval, lookback):
             "currentPrice": ticker_data["currentPrice"],
             "marketCap": ticker_data["marketCap"],
             "52WeekChange": ticker_data["52WeekChange"],
+            "sharesOutstanding": ticker_data["sharesOutstanding"],
             "computed_metric": metric
         }
     
