@@ -75,5 +75,5 @@ lookback = col2.slider('Lookback', min_value=3, max_value=52, value=20, step=1)
 
 result = compute_metric_from_data(data_dict, interval, lookback)
 result = create_dataframe(result)
-st.dataframe(result)
+st.dataframe(result, use_container_width=True)
 
