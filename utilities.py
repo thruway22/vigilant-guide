@@ -1,7 +1,9 @@
 import pandas as pd
 import yfinance as yf
+import streamlit as st
 from autoscraper import AutoScraper
 
+@st.cache_data
 def scrape(url, wanted_list):
     """Scrape and retrieve tickers from the provided URL."""
     scraper = AutoScraper()
@@ -54,34 +56,51 @@ def compute_svix_for_tickers(tickers):
 import yfinance as yf
 from datetime import datetime, timedelta
 
-def compute_start_date(interval: str, lookback: int) -> datetime:
+def compute_start_date_for_max_data() -> datetime:
     today = datetime.today()
-    
-    if interval == "Daily":
-        # Convert business days to calendar days (excluding Fridays and Saturdays)
-        calendar_days = lookback + 2 * (lookback // 5)
-        start_date = today - timedelta(days=calendar_days)
-    elif interval == "Weekly":
-        # Calculate how many days to go back to the previous Sunday
-        days_to_last_sunday = today.weekday() + 1
-        start_date = today - timedelta(days=days_to_last_sunday + (lookback-1)*7)
-    else:
-        raise ValueError("Invalid interval. Please choose 'Daily' or 'Weekly'.")
-    
+    # Calculate how many days to go back to the previous Sunday
+    days_to_last_sunday = today.weekday() + 1
+    start_date = today - timedelta(days=days_to_last_sunday + 51*7)  # 51 weeks + current week
     return start_date
 
-def get_metric(tickers, interval, lookback):
-    start_date = compute_start_date(interval, lookback)
-    
-    metrics = {}
+@st.cache_data
+def download_data(tickers):
+    start_date = compute_start_date_for_max_data()
+    data_dict = {}
     
     for ticker in tickers:
         # Fetch the daily data
-        data = yf.download(ticker, interval="1d", start=start_date.strftime('%Y-%m-%d'), progress=False)
+        historical_data = yf.download(ticker, interval="1d", start=start_date.strftime('%Y-%m-%d'))
+        
+        # Fetch additional information
+        info = yf.Ticker(ticker).info
+        ticker_data = {
+            "shortName": info.get("shortName", None),
+            "longName": info.get("longName", None),
+            "sector": info.get("sector", None),
+            "currentPrice": info.get("currentPrice", None),
+            "marketCap": info.get("marketCap", None),
+            "52WeekChange": info.get("52WeekChange", None),
+            "historical_data": historical_data
+        }
+        
+        data_dict[ticker] = ticker_data
+        
+    return data_dict
+
+def compute_metric_from_data(data_dict, interval, lookback):
+    metrics = {}
+    
+    for ticker, ticker_data in data_dict.items():
+        data = ticker_data["historical_data"]
         
         if interval == "Weekly":
             # Filter only the Thursdays' data
-            data = data[data.index.weekday == 3]
+            data = data[data.index.weekday == 3][-lookback:]
+        else:
+            # Consider business days only (excluding Fridays and Saturdays)
+            calendar_days = lookback + 2 * (lookback // 5)
+            data = data[-calendar_days:]
         
         # Extract required data
         latest_close = data['Close'].iloc[-1]
@@ -90,7 +109,17 @@ def get_metric(tickers, interval, lookback):
         
         # Compute the metric
         metric = 1 - (latest_close - lowest_low) / (highest_high - lowest_low)
-        metrics[ticker] = metric
-
+        
+        metrics[ticker] = {
+            "shortName": ticker_data["shortName"],
+            "longName": ticker_data["longName"],
+            "sector": ticker_data["sector"],
+            "currentPrice": ticker_data["currentPrice"],
+            "marketCap": ticker_data["marketCap"],
+            "52WeekChange": ticker_data["52WeekChange"],
+            "computed_metric": metric
+        }
+    
     return metrics
+
 
