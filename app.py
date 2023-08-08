@@ -25,4 +25,4 @@ tickers = utl.scrape('https://www.argaam.com/en/company/companies-prices', ['222
 data_dict = utl.download_data(tickers)
 
 result = utl.compute_metric_from_data(data_dict, interval, lookback)
-st.dataframe(result)
+st.dataframe(result.T)
