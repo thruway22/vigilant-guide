@@ -16,10 +16,10 @@ interval = col1.selectbox('Interval', ['Daily', 'Weekly'])
 lookback = col2.slider('Lookback', min_value=1, max_value=52, value=20, step=1)
 marketcap = st.slider('Market Cap', min_value=df['marketCap'].min(), max_value=df['marketCap'].max())
 
-st.dataframe(df[df['longName'].isna()])
-st.dataframe(df[df['sector'].isna()])
-st.dataframe(df[df['marketCap'].isna()])
-st.dataframe(df[df['currentPrice'].isna()])
+for ticker in tickers:
+    t = yf.Ticker(ticker).info
+    st.write([t['longName'], t['sharesOutstanding']])
+
 
 # # Sample usage:
 
@@ -36,6 +36,5 @@ st.dataframe(df[df['currentPrice'].isna()])
 
 result = utl.compute_metric_from_data(data_dict, interval, lookback)
 result = pd.DataFrame(result).T
-result = result[result['marketCap'] >= marketcap]
 st.dataframe(result)
 
