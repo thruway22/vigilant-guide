@@ -13,6 +13,7 @@ def scrape(url, wanted_list, progress_bar=None):
         progress_bar.progress(20)
     return tickers
 
+
 @st.cache_data(show_spinner=False)
 def download_data(tickers, progress_bar=None):
     start_date = compute_start_date_for_max_data()
