@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import yfinance as yf
 import utilities as utl
+import matplotlib.pyplot as plt
 
 st.title('Test')
 
@@ -17,7 +18,7 @@ marketcap = st.slider('Market Cap', min_value=df['marketCap'].min(), max_value=d
 
 st.dataframe(df)
 
-st.pyplot(df['marketCap'].fillna(0).hist())
+st.pyplot(plt.hist(df['marketCap'].fillna(0)))
 
 # # Sample usage:
 
