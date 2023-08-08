@@ -29,4 +29,6 @@ marketcap = st.slider('Market Cap', min_value=df['marketCap'].min(), max_value=d
 
 
 result = utl.compute_metric_from_data(data_dict, interval, lookback)
-st.dataframe(pd.DataFrame(result).T)
+result = pd.DataFrame(result).T
+result = result[result['marketCap'] >= marketcap]
+st.dataframe(result)
