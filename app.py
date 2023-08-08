@@ -18,7 +18,8 @@ marketcap = st.slider('Market Cap', min_value=df['marketCap'].min(), max_value=d
 
 for ticker in tickers:
     t = yf.Ticker(ticker).info
-    st.write([t['longName'], t['sharesOutstanding']])
+    st.write(t['longName'])
+    st.write(t['sharesOutstanding'])
 
 # # Sample usage:
 
