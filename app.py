@@ -72,8 +72,6 @@ df = create_dataframe(data_dict)
 col1, col2 = st.columns([1,3])
 interval = col1.selectbox('Interval', ['Daily', 'Weekly'])
 lookback = col2.slider('Lookback', min_value=1, max_value=52, value=20, step=1)
-marketcap = st.slider('Market Cap', min_value=df['marketCap'].min(), max_value=df['marketCap'].max())
-
 
 result = compute_metric_from_data(data_dict, interval, lookback)
 result = pd.DataFrame(result).T
