@@ -4,8 +4,8 @@ import streamlit as st
 from autoscraper import AutoScraper
 from datetime import datetime, timedelta
 
-@st.cache_data(show_spinner=False, progress_bar=None)
-def scrape(url, wanted_list):
+@st.cache_data(show_spinner=False)
+def scrape(url, wanted_list, progress_bar=None):
     scraper = AutoScraper()
     tickers = scraper.build(url, wanted_list)
     tickers = {ticker.strip() + '.SR' for ticker in tickers}
