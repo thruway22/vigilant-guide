@@ -13,7 +13,6 @@ def scrape(url, wanted_list, progress_bar=None):
         progress_bar.progress(20)
     return tickers
 
-
 @st.cache_data(show_spinner=False)
 def download_data(tickers, progress_bar=None):
     start_date = compute_start_date_for_max_data()
@@ -76,10 +75,10 @@ def create_dataframe(result, ticker=None):
 st.title('Saudi Market StochasticVIX')
 
 placeholder = st.empty()
-progress_bar = placeholder.progress(0, text="Fetching and downloading data. Please wait...")
+progression = placeholder.progress(0, text="Fetching and downloading data. Please wait...")
 
-tickers = scrape('https://www.argaam.com/en/company/companies-prices', ['2222'], progress_bar)
-data_dict = download_data(tickers, progress_bar)
+tickers = scrape('https://www.argaam.com/en/company/companies-prices', ['2222'], progression)
+data_dict = download_data(tickers, progression)
 
 placeholder.empty()
 
