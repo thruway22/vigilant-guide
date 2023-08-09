@@ -55,7 +55,7 @@ def compute_metric_from_data(data_dict, interval, lookback):
     return metrics
 
 def create_dataframe(result, ticker=None):
-    df = pd.DataFrame(result).T
+    df = pd.DataFrame(result).T.sort_values('marketCap')
     df.index = df.index.str.replace('.SR', '')
     df.columns = ['Company', 'Price', 'Market Cap', 'SVIX']
 
