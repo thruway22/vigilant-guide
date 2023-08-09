@@ -67,21 +67,17 @@ def create_dataframe(result, ticker=None):
 ######################
 
 
-
+st.title('Saudi Market StochasticVIX')
 
 with st.empty():
     with st.spinner("Fetching and downloading data. Please wait..."):
         tickers = scrape('https://www.argaam.com/en/company/companies-prices', ['2222'])
         data_dict = download_data(tickers)
 
-
-# st.title('Saudi Market StochasticVIX')
-# col1, col2 = st.columns([1,3])
+col1, col2 = st.columns([1,3])
 # interval = col1.selectbox('Interval', ['Daily', 'Weekly'])
-with st.sidebar:
-    st.title('Saudi Market SVIX')
-    interval = st.select_slider('Interval', options=('Weekly', 'Daily'))
-    lookback = st.slider('Lookback', min_value=3, max_value=52, value=20, step=1)
+interval = col1.select_slider('Interval', options=('Weekly', 'Daily'))
+lookback = col2.slider('Lookback', min_value=3, max_value=52, value=20, step=1)
 
 result = compute_metric_from_data(data_dict, interval, lookback)
 create_dataframe(result)
