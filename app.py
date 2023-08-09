@@ -75,7 +75,7 @@ with st.empty():
         data_dict = download_data(tickers)
 
 
-st.title('Saudi Market StochasticVIX')
+# st.title('Saudi Market StochasticVIX')
 # col1, col2 = st.columns([1,3])
 # interval = col1.selectbox('Interval', ['Daily', 'Weekly'])
 with st.sidebar:
