@@ -63,6 +63,15 @@ def create_dataframe(result, ticker=None):
         "SVIX": st.column_config.ProgressColumn(),
     },)
 
+def filter_dataframe(user_input):
+    # Convert user input to lowercase for case-insensitive search
+    user_input = user_input.lower()
+
+    # Check if either column contains the substring
+    mask = df.index.str.contains(user_input) | df['Company'].str.lower().str.contains(user_input)
+    
+    # Return the filtered dataframe
+    return df[mask]
 
 ######################
 
@@ -74,13 +83,14 @@ with st.empty():
         tickers = scrape('https://www.argaam.com/en/company/companies-prices', ['2222'])
         data_dict = download_data(tickers)
 
-col1, col2 = st.columns([1,3])
-# interval = col1.selectbox('Interval', ['Daily', 'Weekly'])
-interval = col1.select_slider('Interval', options=('Weekly', 'Daily'))
-lookback = col2.slider('Lookback', min_value=3, max_value=52, value=20, step=1)
+col1, col2, col3 = st.columns([1, 1, 3])
+interval = col1.selectbox('Interval', ['Daily', 'Weekly'])
+# interval = col1.select_slider('Interval', options=('Weekly', 'Daily'))
+sort = col2.selectbox('Sort by', ['Market Cap', 'SVIX'])
+lookback = col3.slider('Lookback', min_value=3, max_value=52, value=20, step=1)
 search = st.text_input('Search')
-sort = st.selectbox('Sort by', ['Market Cap', 'SVIX'])
-sector = st.multiselect('Secotr', ['Tech', 'Oil', 'Cons'])
+# sort = st.selectbox('Sort by', ['Market Cap', 'SVIX'])
+# sector = st.multiselect('Secotr', ['Tech', 'Oil', 'Cons'])
 
 result = compute_metric_from_data(data_dict, interval, lookback)
 create_dataframe(result)
