@@ -4,7 +4,7 @@ import streamlit as st
 from autoscraper import AutoScraper
 from datetime import datetime, timedelta
 
-@st.cache_resource(show_spinner=False, allow_output_mutation=True)
+@st.cache_resource(show_spinner=False)
 def scrape(url, wanted_list):
     scraper = AutoScraper()
     tickers = scraper.build(url, wanted_list)
@@ -12,7 +12,7 @@ def scrape(url, wanted_list):
     st.session_state.progress = 20
     return tickers
 
-@st.cache_resource(show_spinner=False, allow_output_mutation=True)
+@st.cache_resource(show_spinner=False)
 def download_data(tickers):
     start_date = compute_start_date_for_max_data()
     data_dict = {}
