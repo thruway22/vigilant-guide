@@ -67,7 +67,7 @@ def create_dataframe(result, ticker=None):
 ######################
 
 
-st.title('Saudi Market StochasticVIX')
+
 
 with st.empty():
     with st.spinner("Fetching and downloading data. Please wait..."):
@@ -75,11 +75,13 @@ with st.empty():
         data_dict = download_data(tickers)
 
 
-
+st.title('Saudi Market StochasticVIX')
 # col1, col2 = st.columns([1,3])
 # interval = col1.selectbox('Interval', ['Daily', 'Weekly'])
-interval = st.sidebar.select_slider('Interval', options=('Weekly', 'Daily'))
-lookback = st.sidebar.slider('Lookback', min_value=3, max_value=52, value=20, step=1)
+with st.sidebar:
+    st.title('Saudi Market SVIX')
+    interval = st.select_slider('Interval', options=('Weekly', 'Daily'))
+    lookback = st.slider('Lookback', min_value=3, max_value=52, value=20, step=1)
 
 result = compute_metric_from_data(data_dict, interval, lookback)
 create_dataframe(result)
