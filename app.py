@@ -4,7 +4,7 @@ import streamlit as st
 from autoscraper import AutoScraper
 from datetime import datetime, timedelta
 
-@st.cache_resource(show_spinner=False)
+@st.cache_data(show_spinner=False)
 def scrape(url, wanted_list):
     scraper = AutoScraper()
     tickers = scraper.build(url, wanted_list)
@@ -12,7 +12,7 @@ def scrape(url, wanted_list):
     st.session_state.progress = 20
     return tickers
 
-@st.cache_resource(show_spinner=False)
+@st.cache_data(show_spinner=False)
 def download_data(tickers):
     start_date = compute_start_date_for_max_data()
     data_dict = {}
@@ -25,7 +25,8 @@ def download_data(tickers):
             "marketCap": info.get("marketCap", None),
             "historical_data": historical_data}
         data_dict[ticker] = ticker_data
-        progress = 20 + (idx + 1) / total_tickers * 80
+        st.session_state.tickers_processed += 1
+        progress = 20 + st.session_state.tickers_processed / st.session_state.total_tickers * 80
         st.session_state.progress = progress
     return data_dict
 
@@ -72,21 +73,25 @@ def create_dataframe(result, ticker=None):
 
 st.title('Saudi Market StochasticVIX')
 
-# Initialize session state for progress if not already set
+# Initialize session states if not already set
 if "progress" not in st.session_state:
     st.session_state.progress = 0
+if "tickers_processed" not in st.session_state:
+    st.session_state.tickers_processed = 0
 
 placeholder = st.empty()
-
-# Start Streamlit Progress Bar using session state progress
-progress_text = "Fetching and downloading data. Please wait..."
-my_bar = placeholder.progress(st.session_state.progress, text=progress_text)
+progression = placeholder.progress(0, text="Fetching and downloading data. Please wait...")
 
 tickers = scrape('https://www.argaam.com/en/company/companies-prices', ['2222'])
-my_bar.progress(st.session_state.progress)
+st.session_state.total_tickers = len(tickers)
+progression.progress(st.session_state.progress)
 
-data_dict = download_data(tickers)
-my_bar.progress(st.session_state.progress)
+data_dict = {}
+for ticker in tickers:
+    data_dict.update(download_data(ticker))
+    progression.progress(st.session_state.progress)
+
+# data_dict = download_data(tickers)
 
 placeholder.empty()
 
