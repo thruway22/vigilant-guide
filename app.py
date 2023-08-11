@@ -71,6 +71,7 @@ def create_dataframe(result, sortby, search=""):
     df = df[mask]
 
     # Sort the dataframe
+    sortby = 'marketCap' if 'Market Cap' else 'svix'
     df = df.sort_values(by=sortby, ascending=False)
 
     # Drop the Market Cap column
