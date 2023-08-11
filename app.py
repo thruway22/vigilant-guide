@@ -66,19 +66,21 @@ def compute_metric_from_data(data_dict, interval, lookback):
 def create_dataframe(result, sortby, search=""):
     df = pd.DataFrame(result).T
 
+    df.index = df.index.str.replace('.SR', '')
+    df.columns = ['Company', 'Price', 'Market Cap', 'SVIX']
+
     # Filter based on search input
     mask = (df.index.str.contains(search, case=False)) | (df['longName'].str.contains(search, case=False, na=False))
     df = df[mask]
 
     # Sort the dataframe
-    sortby = 'marketCap' if 'Market Cap' else 'computed_metric'
     df = df.sort_values(by=sortby, ascending=False)
 
     # Drop the Market Cap column
-    df.drop(columns='marketCap', inplace=True)
+    df.drop(columns='Market Cap', inplace=True)
 
-    df.index = df.index.str.replace('.SR', '')
-    df.columns = ['Company', 'Price', 'SVIX']
+    
+    
 
     st.dataframe(df, use_container_width=True, column_config={
         "SVIX": st.column_config.ProgressColumn(),
