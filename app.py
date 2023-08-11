@@ -75,7 +75,7 @@ def download_data(tickers):
             'historical_data': historical_data}
         data_dict[ticker] = ticker_data
 
-    return data_dict, last_date
+    return data_dict, last_date.date()
 
 def compute_start_date_for_max_data() -> datetime:
     '''
