@@ -83,7 +83,7 @@ def create_dataframe(result, sortby, search=""):
     
 
     st.dataframe(df, use_container_width=True, column_config={
-        "SVIX": st.column_config.ProgressColumn(),
+        "SVIX": st.column_config.ProgressColumn(min_value=0.00, max_value=1.00),
     },)
 
 
