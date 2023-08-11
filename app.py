@@ -83,12 +83,11 @@ with st.empty():
         tickers = scrape('https://www.argaam.com/en/company/companies-prices', ['2222'])
         data_dict = download_data(tickers)
 
-col1, col2, col3, col4, col5 = st.columns(5)
+col1, col2, col3, col4 = st.columns(4)
 interval = col1.selectbox('Interval', ['Daily', 'Weekly'])
 lookback = col2.selectbox('Lookback', [14, 20, 52], index=1)
 sortby = col3.selectbox('Sort by', ['Market Cap', 'SVIX'])
 search = col4.text_input('Search')
-reset = col5.button('Reset')
 
 # interval = col1.select_slider('Interval', options=('Weekly', 'Daily'))
 # lookback = col3.slider('Lookback', min_value=3, max_value=52, value=20, step=1)
