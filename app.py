@@ -78,7 +78,7 @@ with st.empty():
         tickers = scrape('https://www.argaam.com/en/company/companies-prices', ['2222'])
         data_dict = download_data(tickers)
 
-col1, col2, col3 = st.columns(3)
+col1, col2, col3 = st.columns([1,1,2])
 interval = col1.selectbox('Interval', ['Daily', 'Weekly'], index=1)
 lookback = col2.selectbox('Lookback', [14, 20, 52], index=1)
 search = col3.text_input('Search')
