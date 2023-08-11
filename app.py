@@ -54,24 +54,35 @@ def compute_metric_from_data(data_dict, interval, lookback):
             "computed_metric": metric}
     return metrics
 
-def create_dataframe(result, ticker=None):
-    df = pd.DataFrame(result).T.sort_values('marketCap', ascending=False)
+# def create_dataframe(result, ticker=None):
+#     df = pd.DataFrame(result).T.sort_values('marketCap', ascending=False)
+#     df.index = df.index.str.replace('.SR', '')
+#     df.columns = ['Company', 'Price', 'Market Cap', 'SVIX']
+
+#     st.dataframe(df, use_container_width=True, column_config={
+#         "SVIX": st.column_config.ProgressColumn(),
+#     },)
+
+def create_dataframe(result, sortby, search=""):
+    df = pd.DataFrame(result).T
+
+    # Filter based on search input
+    mask = (df.index.str.contains(search, case=False)) | (df['longName'].str.contains(search, case=False, na=False))
+    df = df[mask]
+
+    # Sort the dataframe
+    df = df.sort_values(by=sortby, ascending=False)
+
+    # Drop the Market Cap column
+    df.drop(columns='marketCap', inplace=True)
+
     df.index = df.index.str.replace('.SR', '')
-    df.columns = ['Company', 'Price', 'Market Cap', 'SVIX']
+    df.columns = ['Company', 'Price', 'SVIX']
 
     st.dataframe(df, use_container_width=True, column_config={
         "SVIX": st.column_config.ProgressColumn(),
     },)
 
-def filter_dataframe(user_input):
-    # Convert user input to lowercase for case-insensitive search
-    user_input = user_input.lower()
-
-    # Check if either column contains the substring
-    mask = df.index.str.contains(user_input) | df['Company'].str.lower().str.contains(user_input)
-    
-    # Return the filtered dataframe
-    return df[mask]
 
 ######################
 
@@ -89,12 +100,9 @@ lookback = col2.selectbox('Lookback', [14, 20, 52], index=1)
 sortby = col3.selectbox('Sort by', ['Market Cap', 'SVIX'])
 search = col4.text_input('Search')
 
-# interval = col1.select_slider('Interval', options=('Weekly', 'Daily'))
-# lookback = col3.slider('Lookback', min_value=3, max_value=52, value=20, step=1)
-# sort = st.selectbox('Sort by', ['Market Cap', 'SVIX'])
-# sector = st.multiselect('Secotr', ['Tech', 'Oil', 'Cons'])
+# result = compute_metric_from_data(data_dict, interval, lookback)
+# create_dataframe(result)
 
 result = compute_metric_from_data(data_dict, interval, lookback)
-create_dataframe(result)
-
+create_dataframe(result, sortby, search)
 
