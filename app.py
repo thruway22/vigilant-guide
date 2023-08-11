@@ -71,7 +71,7 @@ def create_dataframe(result, sortby, search=""):
     df = df[mask]
 
     # Sort the dataframe
-    sortby = 'computed_metric' if 'Market Cap' else 'computed_metric'
+    sortby = 'marketCap' if 'Market Cap' else 'computed_metric'
     df = df.sort_values(by=sortby, ascending=False)
 
     # Drop the Market Cap column
