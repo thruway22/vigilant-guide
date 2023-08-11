@@ -85,11 +85,12 @@ with st.empty():
 
 col1, col2, col3, col4 = st.columns(4)
 interval = col1.selectbox('Interval', ['Daily', 'Weekly'])
-# interval = col1.select_slider('Interval', options=('Weekly', 'Daily'))
-sort = col2.selectbox('Sort by', ['Market Cap', 'SVIX'])
-# lookback = col3.slider('Lookback', min_value=3, max_value=52, value=20, step=1)
-lookback = col3.selectbox('Lookback', [14, 20, 52], index=1)
+lookback = col2.selectbox('Lookback', [14, 20, 52], index=1)
+sortby = col3.selectbox('Sort by', ['Market Cap', 'SVIX'])
 search = col4.text_input('Search')
+
+# interval = col1.select_slider('Interval', options=('Weekly', 'Daily'))
+# lookback = col3.slider('Lookback', min_value=3, max_value=52, value=20, step=1)
 # sort = st.selectbox('Sort by', ['Market Cap', 'SVIX'])
 # sector = st.multiselect('Secotr', ['Tech', 'Oil', 'Cons'])
 
