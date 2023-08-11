@@ -54,40 +54,21 @@ def compute_metric_from_data(data_dict, interval, lookback):
             "computed_metric": metric}
     return metrics
 
-# def create_dataframe(result, ticker=None):
-#     df = pd.DataFrame(result).T.sort_values('marketCap', ascending=False)
-#     df.index = df.index.str.replace('.SR', '')
-#     df.columns = ['Company', 'Price', 'Market Cap', 'SVIX']
-
-#     st.dataframe(df, use_container_width=True, column_config={
-#         "SVIX": st.column_config.ProgressColumn(),
-#     },)
-
-def create_dataframe(result, sortby, search=""):
+def create_dataframe(result, search=""):
     df = pd.DataFrame(result).T
 
     df.index = df.index.str.replace('.SR', '')
-    df.columns = ['Company', 'Price', 'Market Cap', 'SVIX']
-
-    # Filter based on search input
-    mask = (df.index.str.contains(search, case=False)) | (df['Company'].str.contains(search, case=False, na=False))
+    
+    mask = (df.index.str.contains(search, case=False)) | (df['longName'].str.contains(search, case=False, na=False))
     df = df[mask]
 
-    # Sort the dataframe
-    df = df.sort_values(by=sortby, ascending=False)
+    df = df.sort_values(by='marketCap', ascending=False)
+    df.drop(columns='marketCap', inplace=True)
 
-    # Drop the Market Cap column
-    df.drop(columns='Market Cap', inplace=True)
-
+    df.columns = ['Name', 'Price', 'SVIX']
     
-    
-
     st.dataframe(df, use_container_width=True, column_config={
-        "SVIX": st.column_config.ProgressColumn(format='%.2f'),
-    },)
-
-
-######################
+        "SVIX": st.column_config.ProgressColumn(format='%.2f'),},)
 
 
 st.title('Saudi Market StochasticVIX')
@@ -97,15 +78,11 @@ with st.empty():
         tickers = scrape('https://www.argaam.com/en/company/companies-prices', ['2222'])
         data_dict = download_data(tickers)
 
-col1, col2, col3, col4 = st.columns(4)
+col1, col2, col3 = st.columns(3)
 interval = col1.selectbox('Interval', ['Daily', 'Weekly'], index=1)
 lookback = col2.selectbox('Lookback', [14, 20, 52], index=1)
-sortby = col3.selectbox('Sort by', ['Market Cap', 'SVIX'])
-search = col4.text_input('Search')
+search = col3.text_input('Search')
 
-# result = compute_metric_from_data(data_dict, interval, lookback)
-# create_dataframe(result)
-
-result = compute_metric_from_data(data_dict, interval, lookback)
-create_dataframe(result, sortby, search)
+create_dataframe(
+    compute_metric_from_data(data_dict, interval, lookback), search)
 
