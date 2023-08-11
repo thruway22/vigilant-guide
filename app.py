@@ -98,7 +98,7 @@ with st.empty():
         data_dict = download_data(tickers)
 
 col1, col2, col3, col4 = st.columns(4)
-interval = col1.selectbox('Interval', ['Daily', 'Weekly'])
+interval = col1.selectbox('Interval', ['Daily', 'Weekly'], index=1)
 lookback = col2.selectbox('Lookback', [14, 20, 52], index=1)
 sortby = col3.selectbox('Sort by', ['Market Cap', 'SVIX'])
 search = col4.text_input('Search')
