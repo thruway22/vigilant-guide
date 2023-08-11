@@ -70,7 +70,7 @@ def create_dataframe(result, sortby, search=""):
     df.columns = ['Company', 'Price', 'Market Cap', 'SVIX']
 
     # Filter based on search input
-    mask = (df.index.str.contains(search, case=False)) | (df['longName'].str.contains(search, case=False, na=False))
+    mask = (df.index.str.contains(search, case=False)) | (df['Company'].str.contains(search, case=False, na=False))
     df = df[mask]
 
     # Sort the dataframe
