@@ -79,18 +79,23 @@ def compute_metric_from_data(data_dict, interval, lookback):
     return metrics
 
 
-def create_dataframe(result, search=''):
-    '''Display the computed metrics in a Streamlit dataframe.'''
-
+def create_dataframe(result, search='', threshold_val='None'):
+    '''Display the computed metrics in a Streamlit dataframe filtered by the SVIX threshold.'''
+    
     df = pd.DataFrame(result).T
     df.index = df.index.str.replace('.SR', '')
+
+    # Filter by SVIX threshold if it's not 'None'
+    if threshold_val != 'None':
+        df = df[df['computed_metric'] >= threshold_val]
+
     mask = (df.index.str.contains(search, case=False)) | (df['longName'].str.contains(search, case=False, na=False))
     df = df[mask]
     df = df.sort_values(by='marketCap', ascending=False)
     df.drop(columns='marketCap', inplace=True)
     df.columns = ['Name', 'Price', 'SVIX']
     st.dataframe(df, use_container_width=True,
-        column_config={'SVIX': st.column_config.ProgressColumn(format='%.2f')})
+                 column_config={'SVIX': st.column_config.ProgressColumn(format='%.2f')})
 
 
 st.title('Saudi Market StochasticVIX')
@@ -102,11 +107,12 @@ with st.empty():
         data_dict, last_date = download_data(tickers)
 
 # User input fields
-col1, col2, col3 = st.columns([1,1,2])
+col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
 interval = col1.selectbox('Interval', ['Daily', 'Weekly'], index=1)
 lookback = col2.selectbox('Lookback', [14, 20, 52], index=1)
-search = col3.text_input('Search')
+threshold = col3.selectbox('SVIX Threshold', ['None', 0.60, 0.70, 0.80, 0.90], format_func=lambda x: 'None' if x == 'None' else str(x))
+search = col4.text_input('Search')
 
 # Display the dataframe with computed metrics
-create_dataframe(compute_metric_from_data(data_dict, interval, lookback), search)
+create_dataframe(compute_metric_from_data(data_dict, interval, lookback), search, threshold)
 st.caption(f'Prices updated on {last_date}')
