@@ -5,7 +5,7 @@ from autoscraper import AutoScraper
 from datetime import datetime, timedelta
 
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(ttl='1d', show_spinner=False)
 def scrape(url, wanted_list):
     '''Scrape tickers from the provided URL.'''
 
@@ -16,7 +16,7 @@ def scrape(url, wanted_list):
     return tickers
 
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(ttl='1d', show_spinner=False)
 def download_data(tickers):
     '''Download historical stock data and additional stock information.'''
 
@@ -114,7 +114,10 @@ search = col4.text_input('Search')
 
 # Display the dataframe with computed metrics
 create_dataframe(compute_metric_from_data(data_dict, interval, lookback), search, threshold)
-st.caption(f'Prices updated on {last_date}')
-with st.expander(f'Prices updated on {last_date}'):
-    if st.button('Clear Cache and Redownload Fresh Data'):
+if st.button('Prices updated on {last_date}. Click here to clear Cache and redownload fresh data',
+    use_container_width=True):
         st.cache_data.clear()
+# st.caption(f'Prices updated on {last_date}')
+# with st.expander(f'Prices updated on {last_date}'):
+#     if st.button('Clear Cache and Redownload Fresh Data', use_container_width=True):
+#         st.cache_data.clear()
