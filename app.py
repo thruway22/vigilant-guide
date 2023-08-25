@@ -79,15 +79,14 @@ def compute_metric_from_data(data_dict, interval, lookback):
     return metrics
 
 
-def create_dataframe(result, search='', threshold_val='None'):
+def create_dataframe(result, search='', threshold_val=0.0):
     '''Display the computed metrics in a Streamlit dataframe filtered by the SVIX threshold.'''
     
     df = pd.DataFrame(result).T
     df.index = df.index.str.replace('.SR', '')
 
-    # Filter by SVIX threshold if it's not 'None'
-    if threshold_val != 'None':
-        df = df[df['computed_metric'] >= threshold_val]
+    # Filter by SVIX threshold
+    df = df[df['computed_metric'] >= threshold_val]
 
     mask = (df.index.str.contains(search, case=False)) | (df['longName'].str.contains(search, case=False, na=False))
     df = df[mask]
@@ -110,7 +109,7 @@ with st.empty():
 col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
 interval = col1.selectbox('Interval', ['Daily', 'Weekly'], index=1)
 lookback = col2.selectbox('Lookback', [14, 20, 52], index=1)
-threshold = col3.selectbox('SVIX Threshold', ['None', 0.60, 0.70, 0.80, 0.90], index=3, format_func=lambda x: 'None' if x == 'None' else str(x))
+threshold = col3.selectbox('SVIX Threshold', [0.0, 0.60, 0.70, 0.80, 0.90], index=3)
 search = col4.text_input('Search')
 
 # Display the dataframe with computed metrics
