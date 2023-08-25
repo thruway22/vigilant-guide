@@ -114,7 +114,7 @@ search = col4.text_input('Search')
 
 # Display the dataframe with computed metrics
 create_dataframe(compute_metric_from_data(data_dict, interval, lookback), search, threshold)
-if st.button('Prices updated on {last_date}. Click here to clear Cache and redownload fresh data',
+if st.button(f'Prices updated on {last_date}. Click here to clear Cache and redownload fresh data',
     use_container_width=True):
         st.cache_data.clear()
 # st.caption(f'Prices updated on {last_date}')
