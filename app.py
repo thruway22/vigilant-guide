@@ -110,7 +110,7 @@ with st.empty():
 col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
 interval = col1.selectbox('Interval', ['Daily', 'Weekly'], index=1)
 lookback = col2.selectbox('Lookback', [14, 20, 52], index=1)
-threshold = col3.selectbox('SVIX Threshold', ['None', 0.60, 0.70, 0.80, 0.90], format_func=lambda x: 'None' if x == 'None' else str(x))
+threshold = col3.selectbox('SVIX Threshold', ['None', 0.60, 0.70, 0.80, 0.90], index=3, format_func=lambda x: 'None' if x == 'None' else str(x))
 search = col4.text_input('Search')
 
 # Display the dataframe with computed metrics
